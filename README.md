@@ -5,17 +5,21 @@ AI vibe coding 工具集。基于 `.proto` 文件生成代码、从 Excel 文件
 ## 安装
 
 ```bash
-# 方式一：go install（需 Go）
+# go install（需 Go）
 go install github.com/8liang/game-dev-cli@latest
 
-# 方式二：npx（无需 Go，自动下载二进制）
+# npx（无需 Go，自动下载二进制）
 npx @8liang/game-dev-cli --help
 
-# 方式三：curl 一键安装
+# curl 一键安装
 curl -fsSL https://github.com/8liang/game-dev-cli/releases/latest/download/install.sh | bash
 ```
 
-## proto gen — 从 .proto 文件生成代码
+---
+
+## 手动使用
+
+### proto gen — 从 .proto 文件生成代码
 
 读取指定目录的 `.proto` 文件，调用 `protoc` 编译生成 Go 和/或 TypeScript 代码。
 
@@ -48,7 +52,7 @@ game-dev-cli proto gen ./protos \
   --plugin es,binary=$(which protoc-gen-es),out=./gen/ts
 ```
 
-## excel gen — 从 Excel 文件生成数据
+### excel gen — 从 Excel 文件生成数据
 
 读取指定目录的 `.xlsx`/`.xls` 文件，生成 JSON 数据文件以及对应的 Go struct 和/或 TypeScript interface。
 
@@ -69,7 +73,7 @@ game-dev-cli excel gen <excel-dir> \
 | `--go-package` | Go 包名（与 --go-out 配合使用） |
 | `--ts-out` | TypeScript interface 输出目录 |
 
-## 配置文件
+### 配置文件
 
 支持 YAML 配置文件，通过 `--config` 指定：
 
@@ -79,13 +83,19 @@ game-dev-cli --config gamecli.yaml proto gen ./protos
 
 示例见 [`gamecli.yaml.example`](./gamecli.yaml.example)。
 
-## 在 AI 工具中使用
+---
 
-### Claude Code
+## AI 工具使用
 
-本仓库的 `CLAUDE.md` 注册了 `proto-gen` 和 `excel-gen` 两个 skill。Claude Code 在项目中检测到本仓库时自动可用。
+### Skill（推荐）
 
-### 通用 MCP
+在项目根目录放置本工具的 `skills/` 目录后，AI 工具自动加载 `proto-gen`、`excel-gen` 两个 skill。支持此方式的工具：Claude Code、Cursor、Windsurf 等。
+
+clone 或 submodule 添加本仓库到项目后即可自动生效，无需额外配置。
+
+### MCP（可选）
+
+在 AI 工具的 MCP 配置中添加:
 
 ```json
 {
@@ -97,3 +107,5 @@ game-dev-cli --config gamecli.yaml proto gen ./protos
   }
 }
 ```
+
+`game-dev-cli mcp` 以 stdio MCP server 模式运行，提供 `proto-gen`、`excel-gen` 两个工具接口。适用于不想将 `skills/` 目录放入项目的场景。
