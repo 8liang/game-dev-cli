@@ -49,6 +49,17 @@ npx @8liang/game-dev-cli --help
 curl -fsSL https://github.com/8liang/game-dev-cli/releases/latest/download/install.sh | bash
 ```
 
-## MCP
+## MCP 配置
 
-本仓库提供 MCP 服务配置 [`mcp.json`](./mcp.json)，可在支持 MCP 的 AI 工具中注册为本地工具。
+在 AI 工具 MCP 配置中添加:
+
+```json
+{
+  "mcpServers": {
+    "game-dev-cli": {
+      "command": "game-dev-cli",
+      "args": ["mcp"]
+    }
+  }
+}
+```

@@ -87,8 +87,6 @@ game-dev-cli --config gamecli.yaml proto gen ./protos
 
 ### 通用 MCP
 
-提供标准 MCP 配置 [`mcp.json`](./mcp.json)，可在支持 MCP 的 AI 工具中注册：
-
 ```json
 {
   "mcpServers": {
