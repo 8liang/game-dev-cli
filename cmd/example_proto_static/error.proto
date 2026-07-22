@@ -1,0 +1,25 @@
+syntax = "proto3";
+package messages;
+option go_package = "github.com/8liang/game-dev-cli/pkg/messages";
+
+enum Error {
+  Ok = 0;
+  UnknownError = 1;
+  AuthorizeFail = 2;
+  ServerDown = 3;
+  Accident = 4;
+  Timeout = 5;
+  Kicked = 6;
+  ServerNotReady = 7;
+  InitFail = 8;
+  LoginElsewhere = 9;
+  InvalidUsernameOrPassword = 10;
+  Shutdown = 11;
+  ResolveContentTypeFail = 12;
+}
+
+message ErrorMessage {
+  Error error = 1;
+  uint64 code = 2;
+  string message = 3;
+}

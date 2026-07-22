@@ -1,0 +1,16 @@
+# game-dev-cli 配置示例
+# 使用: game-dev-cli --config gamecli.yaml <subcommand>
+
+proto:
+  default_go_out: ./gen/go
+  default_ts_out: ./gen/ts
+  go_module: github.com/user/project
+  include_paths:
+    - proto/include
+  inject_tag: false
+
+excel:
+  default_json_out: ./data
+  default_go_out: ./types
+  default_ts_out: ./types
+  default_go_package: types

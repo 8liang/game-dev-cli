@@ -1,0 +1,43 @@
+syntax = "proto3";
+package messages;
+import "google/protobuf/timestamp.proto";
+option go_package = "github.com/8liang/game-dev-cli/pkg/messages";
+
+message Role {
+  string id = 1; // @gotags: bson:"_id"
+  Attribute attribute = 2;
+  map<int64, PurchaseRecord> purchaseRecords = 3;
+  map<string, google.protobuf.Timestamp> timedInventory = 4; // 资源过期时间
+  map<string, Asset> inventory = 5; // @gotags: bson:"-"
+  google.protobuf.Timestamp lastStaminaUpdatedAt = 6; // 上次更新体力时间
+}
+
+message Attribute {
+  enum Gender {
+    Unknown = 0;
+    Male = 1;
+    Female = 2;
+  }
+  string id = 1; // @gotags: bson:"_id"
+  string nickName = 2;
+  Gender gender = 3;
+  string avatar = 4;
+}
+
+
+message Asset {
+  enum Type {
+    TypeEmpty = 0; // 普通资源
+    TypeNormal = 1;// 普通资源，打开后会获得其中的所有资源
+    TypeOpen = 2; // 立即开启类资源，打开后会消耗掉这个资源，并获得其中的所有资源
+    TypePack = 3; // 包裹，打开后会获得其中的所有资源
+  }
+  string id = 1; // @gotags: bson:"_id"  binding:"required:" // 资源ID
+  int64 amount = 2; // @gotags: binding:"required,min=1" // 资源数量
+  int64 frozenAmount = 3; // @gotags: json:"frozenAmount" // 冻结数量
+}
+message PurchaseRecord {
+  int64 itemId = 1; // 商品id
+  int64 quantity = 2; // 购买次数
+  google.protobuf.Timestamp lastPurchasedAt = 3; // 上次购买时间
+}

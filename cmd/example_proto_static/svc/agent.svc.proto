@@ -1,0 +1,35 @@
+syntax = "proto3";
+package service;
+option go_package = "github.com/8liang/game-dev-cli/pkg/svc/agent";
+import "google/protobuf/any.proto";
+import "google/protobuf/empty.proto";
+
+import "example/proto/error.proto";
+import "example/proto/messages.proto";
+import "github.com/asynkron/protoactor-go/actor/actor.proto";
+
+
+service Agent {
+  rpc BindConnector(BindConnectorReq) returns (BindConnectorRsp);
+  rpc Disconnect(DisConnectReq)returns(google.protobuf.Empty){}
+  rpc Message(MessageBody) returns (MessageBody);
+}
+
+message BindConnectorReq {
+  string connectorId = 1;
+  actor.PID connectorPID = 2;
+}
+
+message BindConnectorRsp {
+}
+
+message DisConnectReq {
+  actor.PID connectorPID = 1;
+  messages.Error reason = 2;
+}
+
+message MessageBody {
+  uint32 sequence = 1;
+  uint32 code = 2;
+  bytes body = 3;
+}
