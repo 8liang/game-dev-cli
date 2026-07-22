@@ -1,0 +1,17 @@
+name: excel-gen
+description: Generate JSON + Go structs + TypeScript interfaces from Excel files
+
+---
+Generate JSON + Go structs + TypeScript interfaces from Excel files.
+
+用法:
+```bash
+game-dev-cli excel gen <excel-dir> \
+  --json-out <dir> --go-out <dir> --go-package <pkg> --ts-out <dir>
+```
+
+参数:
+- `--json-out` JSON 输出目录（默认: `<excel-dir>/json`）
+- `--go-out` Go struct 输出目录（需配合 `--go-package`）
+- `--go-package` Go 包名
+- `--ts-out` TypeScript interface 输出目录
