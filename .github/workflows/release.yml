@@ -1,0 +1,66 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build ${{ matrix.os }}/${{ matrix.arch }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux, darwin]
+        goarch: [amd64, arm64]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+
+      - name: Build binary
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: 0
+        run: |
+          BINARY=game-dev-cli-${{ matrix.goos }}-${{ matrix.goarch }}
+          go build -trimpath -ldflags="-s -w" -o "$BINARY" .
+          tar czf "$BINARY.tar.gz" "$BINARY"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: game-dev-cli-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: game-dev-cli-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: game-dev-cli-*
+          merge-multiple: true
+
+      - name: Generate checksums
+        run: sha256sum game-dev-cli-*.tar.gz > checksums.txt
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            game-dev-cli-*.tar.gz
+            checksums.txt
+          generate_release_notes: true

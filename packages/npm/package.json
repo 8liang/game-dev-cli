@@ -1,0 +1,27 @@
+{
+  "name": "@8liang/game-dev-cli",
+  "version": "0.0.0",
+  "description": "AI vibe coding 工具集 - proto 编译、Excel 数据导出",
+  "bin": {
+    "game-dev-cli": "cli.js"
+  },
+  "scripts": {
+    "postinstall": "node install.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/8liang/game-dev-cli.git"
+  },
+  "keywords": ["protobuf", "excel", "codegen", "vibe-coding"],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "cli.js",
+    "install.js"
+  ]
+}

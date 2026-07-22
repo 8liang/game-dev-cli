@@ -2,10 +2,17 @@
 
 AI vibe coding 工具集。基于 `.proto` 文件生成代码、从 Excel 文件导出数据。
 
-## 构建
+## 安装
 
 ```bash
-cd game-dev-cli && go build -o ../bin/game-dev-cli ./...
+# 方式一：go install（需 Go）
+go install github.com/8liang/game-dev-cli@latest
+
+# 方式二：npx（无需 Go，自动下载二进制）
+npx @8liang/game-dev-cli --help
+
+# 方式三：curl 一键安装
+curl -fsSL https://github.com/8liang/game-dev-cli/releases/latest/download/install.sh | bash
 ```
 
 ## proto gen — 从 .proto 文件生成代码
@@ -15,7 +22,7 @@ cd game-dev-cli && go build -o ../bin/game-dev-cli ./...
 **要求：** `protoc` 已安装。TS 生成需安装 `protoc-gen-es`。
 
 ```bash
-./bin/game-dev-cli proto gen <proto-dir> \
+game-dev-cli proto gen <proto-dir> \
   --go-out ./gen/go \
   --ts-out ./gen/ts \
   --go-module github.com/user/project
@@ -29,14 +36,24 @@ cd game-dev-cli && go build -o ../bin/game-dev-cli ./...
 | `--ts-out` | TypeScript 代码输出目录（需 protoc-gen-es） |
 | `--go-module` | Go module 路径 |
 | `--include` | protoc `-I` 附加包含路径 |
+| `--plugin` | protoc 插件，可重复；格式: `name[,binary=<path>][,out=<dir>][,module=<mod>][,opt=<k=v>]` |
 | `--inject-tag` | 编译后注入 struct tag（需 protoc-go-inject-tag） |
+| `--no-recursive` | 只扫描顶层 .proto，不递归子目录 |
+
+--plugin 示例：
+
+```bash
+game-dev-cli proto gen ./protos \
+  --plugin go-grain,binary=$(which protoc-gen-go-grain),out=./gen,module=github.com/user/project \
+  --plugin es,binary=$(which protoc-gen-es),out=./gen/ts
+```
 
 ## excel gen — 从 Excel 文件生成数据
 
 读取指定目录的 `.xlsx`/`.xls` 文件，生成 JSON 数据文件以及对应的 Go struct 和/或 TypeScript interface。
 
 ```bash
-./bin/game-dev-cli excel gen <excel-dir> \
+game-dev-cli excel gen <excel-dir> \
   --json-out ./data \
   --go-out ./types \
   --go-package types \
@@ -57,14 +74,28 @@ cd game-dev-cli && go build -o ../bin/game-dev-cli ./...
 支持 YAML 配置文件，通过 `--config` 指定：
 
 ```bash
-./bin/game-dev-cli --config gamecli.yaml proto gen ./protos
+game-dev-cli --config gamecli.yaml proto gen ./protos
 ```
 
 示例见 [`gamecli.yaml.example`](./gamecli.yaml.example)。
 
-## 在 Claude Code 中使用
+## 在 AI 工具中使用
 
-本仓库的 `CLAUDE.md` 注册了两个 skill：
+### Claude Code
 
-- `proto-gen` — AI 检测到 `.proto` 文件变更时自动生成代码
-- `excel-gen` — AI 检测到 Excel 文件变更时自动导出数据
+本仓库的 `CLAUDE.md` 注册了 `proto-gen` 和 `excel-gen` 两个 skill。Claude Code 在项目中检测到本仓库时自动可用。
+
+### 通用 MCP
+
+提供标准 MCP 配置 [`mcp.json`](./mcp.json)，可在支持 MCP 的 AI 工具中注册：
+
+```json
+{
+  "mcpServers": {
+    "game-dev-cli": {
+      "command": "game-dev-cli",
+      "args": ["mcp"]
+    }
+  }
+}
+```
