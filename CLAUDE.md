@@ -2,7 +2,7 @@
 
 ## Skills
 
-见 `skills/index.md`。
+见 `skills/game-dev-cli/SKILL.md`。
 
 ## Installation
 
